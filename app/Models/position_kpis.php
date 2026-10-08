@@ -2,9 +2,40 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class position_kpis extends Model
 {
-    //
+    use HasFactory;
+
+    protected $fillable = [
+        'position_id',
+        'kpi_indicator_id',
+        'target',
+        'weight',
+        'frequency',
+        'calculation_type',
+        'is_active'
+    ];
+
+    public $timestamps = false;
+
+    public function kpiSubmissions()
+    {
+        return $this->hasOne(KpiSubmission::class, 'position_kpi_id', 'id');
+    }
+
+    public function kpiIndicator()
+    {
+        return $this->belongsTo(kpiIndicator::class, 'kpi_indicator_id', 'id');
+    }
+
+    public function position()
+    {
+        return $this->belongsTo(position::class, 'position_id', 'id');
+    }
 }

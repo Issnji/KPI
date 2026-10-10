@@ -24,12 +24,12 @@ class position_kpis extends Model
 
     public function kpiSubmissions()
     {
-        return $this->hasOne(KpiSubmission::class, 'position_kpi_id', 'id');
+        return $this->hasMany(kpi_submission::class, 'position_kpi_id', 'id');
     }
 
     public function kpiIndicator()
     {
-        return $this->belongsTo(kpiIndicator::class, 'kpi_indicator_id', 'id');
+        return $this->belongsTo(kpi_indicator::class, 'kpi_indicator_id', 'id');
     }
 
     public function position()

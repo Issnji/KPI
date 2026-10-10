@@ -24,7 +24,7 @@ class kpi_indicator extends Model
 
     public function kpiCategory()
     {
-        return $this->belongsTo(kpi_category::class, 'category_id', 'id');
+        return $this->belongsTo(kpi_categories::class, 'category_id', 'id');
     }
 
     public function positionKpis()

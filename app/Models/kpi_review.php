@@ -24,7 +24,7 @@ class kpi_review extends Model
 
     public function kpiSubmission()
     {
-        return $this->belongsTo(KpiSubmission::class, 'submission_id', 'id');
+        return $this->belongsTo(kpi_submission::class, 'submission_id', 'id');
     }
 
     public function reviewer()

@@ -31,9 +31,9 @@ class KpiSubmission extends Model
         'submitted_at' => 'datetime',
     ];
 
-    public function positionKpi(): BelongsTo
+    public function positionKpis(): BelongsTo
     {
-        return $this->belongsTo(PositionKpi::class);
+        return $this->belongsTo(position_kpis::class);
     }
 
     public function user(): BelongsTo
@@ -43,11 +43,11 @@ class KpiSubmission extends Model
 
     public function evidences(): HasMany
     {
-        return $this->hasMany(KpiEvidence::class, 'submission_id');
+        return $this->hasMany(kpi_evidences::class, 'submission_id');
     }
 
     public function review(): HasOne
     {
-        return $this->hasOne(KpiReview::class, 'submission_id');
+        return $this->hasOne(kpi_review::class, 'submission_id');
     }
 }

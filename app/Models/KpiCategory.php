@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class kpi_categories extends Model
+class KpiCategory extends Model
 {
     use HasFactory;
+
+    protected $table = 'kpi_categories';
 
     protected $fillable = [
         'name',
@@ -19,6 +21,6 @@ class kpi_categories extends Model
 
     public function kpiIndicators()
     {
-        return $this->hasMany(kpi_indicator::class, 'category_id', 'id');
+        return $this->hasMany(KpiIndicator::class, 'category_id', 'id');
     }
 }

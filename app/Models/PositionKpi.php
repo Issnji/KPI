@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class position_kpis extends Model
+class PositionKpi extends Model
 {
     use HasFactory;
+
+    protected $table = 'position_kpis';
 
     protected $fillable = [
         'position_id',
@@ -24,16 +26,16 @@ class position_kpis extends Model
 
     public function kpiSubmissions()
     {
-        return $this->hasMany(kpi_submission::class, 'position_kpi_id', 'id');
+        return $this->hasMany(KpiSubmission::class, 'position_kpi_id', 'id');
     }
 
     public function kpiIndicator()
     {
-        return $this->belongsTo(kpi_indicator::class, 'kpi_indicator_id', 'id');
+        return $this->belongsTo(KpiIndicator::class, 'kpi_indicator_id', 'id');
     }
 
     public function position()
     {
-        return $this->belongsTo(position::class, 'position_id', 'id');
+        return $this->belongsTo(Position::class, 'position_id', 'id');
     }
 }

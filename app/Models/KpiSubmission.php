@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class KpiSubmission extends Model
 {
     use HasFactory;
+    
+    protected $table = 'kpi_submissions';
 
     protected $fillable = [
         'position_kpi_id',
@@ -43,11 +45,11 @@ class KpiSubmission extends Model
 
     public function evidences(): HasMany
     {
-        return $this->hasMany(kpi_evidences::class, 'submission_id');
+        return $this->hasMany(KpiEvidence::class, 'submission_id');
     }
 
     public function review(): HasOne
     {
-        return $this->hasOne(kpi_review::class, 'submission_id');
+        return $this->hasOne(KpiReview::class, 'submission_id');
     }
 }

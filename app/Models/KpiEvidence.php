@@ -8,27 +8,28 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class kpi_review extends Model
+class KpiEvidence extends Model
 {
     use HasFactory;
 
+    protected $table = 'kpi_evidences';
+
     protected $fillable = [
         'submission_id',
-        'reviewer_id',
-        'review_type',
-        'status',
-        'score',
-        'notes',
-        'reviewed_at'
+        'uploaded_by',
+        'file_name',
+        'file_path',
+        'file_type',
+        'created_at'
     ];
 
     public function kpiSubmission()
     {
-        return $this->belongsTo(kpi_submission::class, 'submission_id', 'id');
+        return $this->belongsTo(KpiSubmission::class, 'submission_id', 'id');
     }
 
-    public function reviewer()
+    public function uploader()
     {
-        return $this->belongsTo(User::class, 'reviewer_id', 'id');
+        return $this->belongsTo(User::class, 'uploaded_by', 'id');
     }
 }

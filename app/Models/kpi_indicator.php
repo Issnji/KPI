@@ -22,8 +22,6 @@ class kpi_indicator extends Model
         'is_active'
     ];
 
-    public $timestamps = false;
-
     public function kpiCategory()
     {
         return $this->belongsTo(kpi_category::class, 'category_id', 'id');

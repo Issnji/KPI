@@ -17,8 +17,6 @@ class kpi_categories extends Model
         'description',
     ];
 
-    public $timestamps = false;
-
     public function kpiIndicators()
     {
         return $this->hasMany(kpi_indicator::class, 'category_id', 'id');

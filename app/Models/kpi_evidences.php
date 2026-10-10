@@ -21,8 +21,6 @@ class kpi_evidences extends Model
         'created_at'
     ];
 
-    public $timestamps = false;
-
     public function kpiSubmission()
     {
         return $this->belongsTo(KpiSubmission::class, 'submission_id', 'id');

@@ -22,8 +22,6 @@ class position_kpis extends Model
         'is_active'
     ];
 
-    public $timestamps = false;
-
     public function kpiSubmissions()
     {
         return $this->hasOne(KpiSubmission::class, 'position_kpi_id', 'id');

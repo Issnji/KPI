@@ -16,8 +16,6 @@ class position extends Model
         'description',
     ];
 
-    public $timestamps = false;
-
     public function users()
     {
         return $this->hasMany(User::class, 'position_id', 'id');

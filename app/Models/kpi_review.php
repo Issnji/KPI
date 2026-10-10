@@ -22,8 +22,6 @@ class kpi_review extends Model
         'reviewed_at'
     ];
 
-    public $timestamps = false;
-
     public function kpiSubmission()
     {
         return $this->belongsTo(KpiSubmission::class, 'submission_id', 'id');

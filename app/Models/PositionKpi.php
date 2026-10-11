@@ -24,6 +24,15 @@ class PositionKpi extends Model
         'is_active'
     ];
 
+    protected function casts(): array
+{
+    return [
+        'target'    => 'decimal:2',
+        'weight'    => 'decimal:2',
+        'is_active' => 'boolean',
+    ];
+}
+
     public function kpiSubmissions()
     {
         return $this->hasMany(KpiSubmission::class, 'position_kpi_id', 'id');

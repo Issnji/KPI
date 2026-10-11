@@ -23,6 +23,13 @@ class KpiEvidence extends Model
         'created_at'
     ];
 
+    public const UPDATED_AT = null;
+
+    protected function casts(): array
+    {
+        return ['created_at' => 'datetime'];
+    }
+
     public function kpiSubmission()
     {
         return $this->belongsTo(KpiSubmission::class, 'submission_id', 'id');

@@ -35,7 +35,7 @@ class KpiSubmission extends Model
 
     public function positionKpis(): BelongsTo
     {
-        return $this->belongsTo(position_kpis::class);
+        return $this->belongsTo(PositionKpi::class);
     }
 
     public function user(): BelongsTo

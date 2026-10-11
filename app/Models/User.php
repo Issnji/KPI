@@ -36,6 +36,11 @@ class User extends Authenticatable
         return $this->belongsTo(Position::class);
     }
 
+    public function kpiSubmissions()
+    {
+        return $this->hasMany(KpiSubmission::class, 'user_id', 'id');
+    }
+
     public function roleKey(): ?string
     {
         return $this->role ? Str::lower(trim($this->role->name)) : null;

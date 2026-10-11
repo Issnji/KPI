@@ -31,6 +31,6 @@ class KpiIndicator extends Model
 
     public function positionKpis()
     {
-        return $this->hasMany(PositionKpis::class, 'kpi_indicator_id', 'id');
+        return $this->hasMany(PositionKpi::class, 'kpi_indicator_id', 'id');
     }
 }

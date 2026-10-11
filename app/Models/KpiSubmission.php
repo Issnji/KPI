@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class KpiSubmission extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'kpi_submissions';
 
     protected $fillable = [

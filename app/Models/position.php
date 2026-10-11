@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Position extends Model
 {
     use HasFactory;
+
+    protected $table = 'positions';
+    
     protected $fillable = [
         'name',
         'description',

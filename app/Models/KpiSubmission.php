@@ -33,7 +33,7 @@ class KpiSubmission extends Model
         'submitted_at' => 'datetime',
     ];
 
-    public function positionKpis(): BelongsTo
+    public function positionKpi(): BelongsTo
     {
         return $this->belongsTo(PositionKpi::class);
     }

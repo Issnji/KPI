@@ -10,6 +10,7 @@ use App\Http\Controllers\PositionController;
 use App\Http\Controllers\PositionKpisController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\MyKpiController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login']);
@@ -18,25 +19,27 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('me', [AuthController::class, 'me']);
     Route::post('logout', [AuthController::class, 'logout']);
 
-Route::middleware(['auth:sanctum', 'role:admin'])
-    ->get('tes/admin', fn () => response()->json(['ok' => 'halo admin']));
+    // FE karyawan
+    Route::get('my-kpis', [MyKpiController::class, 'index'])
+        ->middleware('role:karyawan,manager,admin');
 
-Route::middleware(['auth:sanctum', 'role:karyawan'])
-    ->get('tes/karyawan', fn () => response()->json(['ok' => 'halo karyawan']));
+    // Katalog (read) untuk admin & manager
+    Route::middleware('role:admin,manager')->group(function () {
+        Route::get('kpi-categories', [KpiCategoriesController::class, 'index']);
+        Route::get('positions/{position}/kpis', [PositionController::class, 'kpis']);
+        Route::apiResource('kpi-reviews', KpiReviewController::class);
+    });
 
     Route::middleware('role:admin')->group(function () {
         Route::apiResources([
             'roles'          => RoleController::class,
             'positions'      => PositionController::class,
             'users'          => UserController::class,
-            'kpi-categories' => KpiCategoriesController::class,
             'kpi-indicators' => KpiIndicatorController::class,
             'position-kpis'  => PositionKpisController::class,
         ]);
-    });
-
-    Route::middleware('role:admin,manager')->group(function () {
-        Route::apiResource('kpi-reviews', KpiReviewController::class);
+        // 'kpi-categories' dikeluarkan dari sini; index sudah di atas.
+        // Daftarkan lagi store/update/destroy nanti dengan ->except('index').
     });
 
     Route::middleware('role:karyawan,manager,admin')->group(function () {

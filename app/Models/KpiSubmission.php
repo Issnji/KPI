@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use app\Enums\KpiSubmissionStatus;
 
 class KpiSubmission extends Model
 {
@@ -30,6 +31,7 @@ class KpiSubmission extends Model
         'period_end' => 'date',
         'answer_yes_no' => 'boolean',
         'numeric_value' => 'decimal:2',
+        'status' => KpiSubmissionStatus::class,
         'submitted_at' => 'datetime',
     ];
 

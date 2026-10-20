@@ -11,6 +11,7 @@ use App\Http\Controllers\PositionKpisController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MyKpiController;
+use App\Http\Controllers\MyKpiSubmissionController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login']);
@@ -43,7 +44,12 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::middleware('role:karyawan,manager,admin')->group(function () {
-        Route::apiResource('kpi-submissions', KpiSubmissionController::class);
-        Route::apiResource('kpi-evidences', KpiEvidencesController::class);
-    });
+    // Alur karyawan
+    Route::post('my-kpis/submissions', [MyKpiSubmissionController::class, 'store']);
+    Route::post('kpi-submissions/{kpiSubmission}/evidences', [KpiEvidencesController::class, 'storeForSubmission']);
+
+    // CRUD generik: batasi dulu, karena store/update/destroy-nya menerima user_id dari client
+    Route::apiResource('kpi-submissions', KpiSubmissionController::class)->only(['index', 'show']);
+    Route::apiResource('kpi-evidences', KpiEvidencesController::class);
+});
 });

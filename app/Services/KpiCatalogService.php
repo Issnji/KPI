@@ -8,6 +8,7 @@ use App\Models\PositionKpi;
 use App\Models\User;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Collection;
+use App\Support\KpiPeriod;
 
 class KpiCatalogService
 {
@@ -71,12 +72,6 @@ class KpiCatalogService
     /** @return array{start: string, end: string} */
     private function period(string $frequency, CarbonInterface $date): array
     {
-        [$start, $end] = match ($frequency) {
-            'WEEKLY'  => [$date->copy()->startOfWeek(), $date->copy()->endOfWeek()],
-            'MONTHLY' => [$date->copy()->startOfMonth(), $date->copy()->endOfMonth()],
-            default   => [$date->copy()->startOfDay(), $date->copy()->endOfDay()],
-        };
-
-        return ['start' => $start->toDateString(), 'end' => $end->toDateString()];
+        return KpiPeriod::for($frequency, $date);
     }
 }

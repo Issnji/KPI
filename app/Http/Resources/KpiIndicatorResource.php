@@ -19,6 +19,7 @@ class KpiIndicatorResource extends JsonResource
             'is_active'        => $this->is_active,
             'category'         => new KpiCategoryResource($this->whenLoaded('kpiCategory')),
             'requires_evidence' => $this->requires_evidence,
+            'position_kpis_count' => $this->whenCounted('positionKpis'),
         ];
     }
 }

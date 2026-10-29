@@ -50,6 +50,7 @@ class KpiCatalogService
 
         // 1 query untuk semua submission di rentang periode (bukan 1 query per KPI)
         $submissions = KpiSubmission::query()
+            ->withCount('evidences')
             ->where('user_id', $user->id)
             ->whereIn('position_kpi_id', $items->pluck('id'))
             ->whereDate('period_start', '>=', $windows->min('start'))

@@ -28,28 +28,48 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:admin,manager')->group(function () {
         Route::get('kpi-categories', [KpiCategoriesController::class, 'index']);
         Route::get('positions/{position}/kpis', [PositionController::class, 'kpis']);
-        Route::apiResource('kpi-reviews', KpiReviewController::class);
+        Route::middleware('role:admin,manager')->prefix('reviews')->group(function () {
+            // Alur utama: per laporan karyawan
+            Route::get('reports', [KpiReviewController::class, 'reports']);
+            Route::get('reports/{user}/{date}', [KpiReviewController::class, 'reportShow'])
+                ->whereNumber('user')->where('date', '\d{4}-\d{2}-\d{2}');
+            Route::post('reports/{user}/{date}', [KpiReviewController::class, 'reportDecide'])
+                ->whereNumber('user')->where('date', '\d{4}-\d{2}-\d{2}');
+
+            // Opsional: per indikator / bulk (tetap berlaku untuk seluruh laporan)
+            Route::get('queue', [KpiReviewController::class, 'queue']);
+            Route::get('submissions/{kpiSubmission}', [KpiReviewController::class, 'show']);
+            Route::post('submissions/{kpiSubmission}', [KpiReviewController::class, 'store']);
+            Route::post('bulk', [KpiReviewController::class, 'bulk']);
+        });
     });
 
     Route::middleware('role:admin')->group(function () {
         Route::apiResources([
             'roles'          => RoleController::class,
-            'positions'      => PositionController::class,
-            'users'          => UserController::class,
             'kpi-indicators' => KpiIndicatorController::class,
             'position-kpis'  => PositionKpisController::class,
         ]);
-        // 'kpi-categories' dikeluarkan dari sini; index sudah di atas.
-        // Daftarkan lagi store/update/destroy nanti dengan ->except('index').
+    });
+
+    Route::middleware('role:admin')->prefix('admin')->group(function () {
+        // Dropdown untuk form tambah/edit akun
+        Route::get('roles', [RoleController::class, 'index']);
+        Route::get('positions', [PositionController::class, 'index']);
+
+        // Akun karyawan & store manager
+        Route::apiResource('users', UserController::class);
+        Route::patch('users/{user}/status', [UserController::class, 'updateStatus']);
+        Route::put('users/{user}/password', [UserController::class, 'resetPassword']);
+
+        // Capaian
+        Route::get('kpi-submissions', [AdminKpiSubmissionController::class, 'index']);
+        Route::get('kpi-submissions/{kpiSubmission}', [AdminKpiSubmissionController::class, 'show']);
     });
 
     Route::middleware('role:karyawan,manager,admin')->group(function () {
     // Alur karyawan
     Route::post('my-kpis/submissions', [MyKpiSubmissionController::class, 'store']);
     Route::post('kpi-submissions/{kpiSubmission}/evidences', [KpiEvidencesController::class, 'storeForSubmission']);
-
-    // CRUD generik: batasi dulu, karena store/update/destroy-nya menerima user_id dari client
-    Route::apiResource('kpi-submissions', KpiSubmissionController::class)->only(['index', 'show']);
-    Route::apiResource('kpi-evidences', KpiEvidencesController::class);
 });
 });

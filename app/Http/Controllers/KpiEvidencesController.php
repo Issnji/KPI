@@ -13,6 +13,13 @@ class KpiEvidencesController extends Controller
     {
         abort_unless($kpiSubmission->user_id === $request->user()->id, 403, 'Anda tidak memiliki akses.');
         abort_unless($kpiSubmission->status->isEditable(), 422, 'Submission sudah dikirim, bukti tidak bisa diubah.');
+        $kpiSubmission->loadMissing('positionKpi.kpiIndicator:id,name,requires_evidence');
+
+        abort_unless(
+            $kpiSubmission->positionKpi->kpiIndicator->requires_evidence,
+            422,
+            'Indikator ini tidak memerlukan foto bukti.'
+        );
 
         $request->validate([
             'file' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'], // 5 MB

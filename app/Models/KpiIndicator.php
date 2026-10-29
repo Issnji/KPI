@@ -15,18 +15,22 @@ class KpiIndicator extends Model
     protected $table = 'kpi_indicators';
 
     protected $fillable = [
-        'category_id',
-        'name',
-        'description',
-        'unit',
-        'assessment_type',
-        'calculation_type',
-        'is_active'
-    ];
+    'category_id',
+    'name',
+    'description',
+    'unit',
+    'assessment_type',
+    'calculation_type',
+    'requires_evidence',
+    'is_active',
+];
 
-    protected function casts(): array
+protected function casts(): array
 {
-    return ['is_active' => 'boolean'];
+    return [
+        'is_active'         => 'boolean',
+        'requires_evidence' => 'boolean',
+    ];
 }
 
     public function kpiCategory()

@@ -18,6 +18,11 @@ class KpiSubmissionResource extends JsonResource
             'answer_yes_no'   => $this->answer_yes_no,
             'numeric_value'   => $this->numeric_value !== null ? (float) $this->numeric_value : null,
             'submitted_at'    => $this->submitted_at,
+            'evidences' => $this->whenLoaded('evidences', fn () => $this->evidences->map(fn ($e) => [
+                'id'        => $e->id,
+                'file_name' => $e->file_name,
+                'url'       => \Storage::disk('public')->url($e->file_path),
+            ])),
         ];
     }
 }

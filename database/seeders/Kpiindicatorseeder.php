@@ -14,21 +14,25 @@ use RuntimeException;
  * Seeder kategori, indikator, dan penugasan KPI per posisi (Roti Wonosari).
  * Jalankan SETELAH RolePositionSeeder (posisi harus sudah ada):
  *   php artisan db:seed --class=KpiIndicatorSeeder
- *
- * Idempotent: aman dijalankan berulang (updateOrCreate by name).
+*
+* Idempotent: aman dijalankan berulang (updateOrCreate by name).
  * Target bertanda [USULAN] belum disebut owner di form -> konfirmasi dulu.
- */
+*/
+
+/** Indikator yang wajib melampirkan foto bukti saat submit. */
+
 class KpiIndicatorSeeder extends Seeder
 {
     private const NUM  = 'NUMERIC';
     private const YN   = 'YES_NO';
     private const HIGH = 'HIGHER_IS_BETTER';
     private const LOW  = 'LOWER_IS_BETTER';
-
+    
     private const D = 'DAILY';
     private const W = 'WEEKLY';
     private const M = 'MONTHLY';
-
+    private const EVIDENCE_REQUIRED = ['PRD_OUTPUT', 'CLN_PROD', 'PRD_EQUIP'];
+    
     /** @var array<string, string> code => calculation_type */
     private array $calc = [];
 
@@ -65,6 +69,18 @@ class KpiIndicatorSeeder extends Seeder
 
                 $ids[$code]        = $indicator->id;
                 $this->calc[$code] = $calc;
+                $indicator = KpiIndicator::updateOrCreate(
+                ['name' => $name],
+                [
+                    'category_id'       => $category->id,
+                    'description'       => $description,
+                    'unit'              => $unit,
+                    'assessment_type'   => $assessment,
+                    'calculation_type'  => $calc,
+                    'requires_evidence' => in_array($code, self::EVIDENCE_REQUIRED, true),
+                    'is_active'         => true,
+                ]
+);
             }
         }
 

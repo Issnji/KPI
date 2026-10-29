@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Enums\KpiSubmissionStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use app\Enums\KpiSubmissionStatus;
+
 
 class KpiSubmission extends Model
 {
@@ -20,6 +21,7 @@ class KpiSubmission extends Model
         'user_id',
         'period_start',
         'period_end',
+        'report_date',
         'answer_yes_no',
         'numeric_value',
         'status',
@@ -27,12 +29,13 @@ class KpiSubmission extends Model
     ];
 
     protected $casts = [
-        'period_start' => 'date',
-        'period_end' => 'date',
+        'period_start'  => 'date',
+        'period_end'    => 'date',
+        'report_date'   => 'date',
         'answer_yes_no' => 'boolean',
         'numeric_value' => 'decimal:2',
-        'status' => KpiSubmissionStatus::class,
-        'submitted_at' => 'datetime',
+        'status'        => KpiSubmissionStatus::class,
+        'submitted_at'  => 'datetime',
     ];
 
     public function positionKpi(): BelongsTo

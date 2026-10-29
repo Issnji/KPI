@@ -18,6 +18,7 @@ class KpiIndicatorResource extends JsonResource
             'calculation_type' => $this->calculation_type,  // HIGHER_IS_BETTER | LOWER_IS_BETTER
             'is_active'        => $this->is_active,
             'category'         => new KpiCategoryResource($this->whenLoaded('kpiCategory')),
+            'requires_evidence' => $this->requires_evidence,
         ];
     }
 }

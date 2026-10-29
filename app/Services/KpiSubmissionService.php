@@ -26,9 +26,9 @@ class KpiSubmissionService
 
         $date ??= now();
 
-        // 1 query: hanya KPI aktif milik jabatan user (mencegah isi KPI jabatan lain)
+        // Hanya KPI aktif milik jabatan user (mencegah isi KPI jabatan lain)
         $positionKpis = PositionKpi::query()
-            ->with('kpiIndicator:id,name,assessment_type')
+            ->with('kpiIndicator:id,name,assessment_type,requires_evidence')
             ->where('position_id', $user->position_id)
             ->where('is_active', true)
             ->whereIn('id', collect($items)->pluck('position_kpi_id'))
@@ -37,17 +37,17 @@ class KpiSubmissionService
 
         $this->assertItemsValid($items, $positionKpis);
 
-        return transaction(function () use ($user, $items, $submit, $date, $positionKpis): Collection {
-        // return DB::transaction(function () use ($user, $items, $submit, $date, $positionKpis): Collection {
+        return DB::transaction(function () use ($user, $items, $submit, $date, $positionKpis): Collection {
             $saved = collect();
 
             foreach ($items as $i => $item) {
                 /** @var PositionKpi $pk */
-                $pk     = $positionKpis[(int) $item['position_kpi_id']];
-                $period = KpiPeriod::for($pk->frequency, $date);
+                $pk      = $positionKpis[(int) $item['position_kpi_id']];
+                $period  = KpiPeriod::for($pk->frequency, $date);
                 $isYesNo = $pk->kpiIndicator->assessment_type === 'YES_NO';
 
                 $submission = KpiSubmission::query()
+                    ->withCount('evidences')
                     ->where('user_id', $user->id)
                     ->where('position_kpi_id', $pk->id)
                     ->whereDate('period_start', $period['start'])
@@ -58,6 +58,17 @@ class KpiSubmissionService
                     throw ValidationException::withMessages([
                         "items.$i.position_kpi_id" => "KPI '{$pk->kpiIndicator->name}' periode ini sudah "
                             . strtolower($submission->status->value) . ' dan tidak bisa diubah.',
+                    ]);
+                }
+
+                // Foto bukti hanya wajib untuk indikator yang ditandai requires_evidence
+                if (
+                    $submit
+                    && $pk->kpiIndicator->requires_evidence
+                    && (! $submission || $submission->evidences_count === 0)
+                ) {
+                    throw ValidationException::withMessages([
+                        "items.$i.position_kpi_id" => "Unggah foto bukti untuk '{$pk->kpiIndicator->name}' sebelum mengirim.",
                     ]);
                 }
 

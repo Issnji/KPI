@@ -77,6 +77,7 @@ class KpiSubmissionService
                     'position_kpi_id' => $pk->id,
                     'period_start'    => $period['start'],
                     'period_end'      => $period['end'],
+                    'report_date'     => $date->toDateString(), 
                 ]);
 
                 $submission->fill([
@@ -84,6 +85,7 @@ class KpiSubmissionService
                     'numeric_value' => $isYesNo ? null : $item['numeric_value'],
                     'status'        => $submit ? KpiSubmissionStatus::Submitted : KpiSubmissionStatus::Draft,
                     'submitted_at'  => $submit ? now() : null,
+                    'report_date'   => $submission->report_date?->toDateString() ?? $date->toDateString(),
                 ])->save();
 
                 $saved->push($submission);

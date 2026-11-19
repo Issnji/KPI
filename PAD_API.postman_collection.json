@@ -1,0 +1,1524 @@
+{
+  "info": {
+    "_postman_id": "274c3462-49b3-4c9c-bf4d-04da1db31cc2",
+    "name": "PAD API - Performance Appraisal Dashboard",
+    "description": "Collection Postman lengkap untuk pengujian REST API sistem Performance Appraisal Dashboard (PAD) Roti Wonosari.\n\n### Cara Penggunaan:\n1. Pastikan server Laravel berjalan (`php artisan serve` di `http://127.0.0.1:8000`).\n2. Jalankan request di folder `01. Autentikasi -> Login (Admin / Store Manager / Karyawan)`.\n3. Token Bearer otomatis tersimpan di variabel `{{token}}` dan otomatis digunakan di semua endpoint lainnya.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "01. Autentikasi",
+      "description": "Endpoint login, profile (me), dan logout.",
+      "item": [
+        {
+          "name": "Login - Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "login"
+              ]
+            },
+            "description": "Login sebagai Admin. Token otomatis disimpan ke variabel {{token}}.",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@rotiwonosari.test\",\n  \"password\": \"password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var res = pm.response.json();",
+                  "    if (res.token) {",
+                  "        pm.collectionVariables.set(\"token\", res.token);",
+                  "        pm.environment.set(\"token\", res.token);",
+                  "        console.log(\"Token berhasil disimpan:\", res.token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login - Store Manager",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "login"
+              ]
+            },
+            "description": "Login sebagai Store Manager (role: Manager). Token otomatis disimpan ke variabel {{token}}.",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"sm@rotiwonosari.test\",\n  \"password\": \"password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var res = pm.response.json();",
+                  "    if (res.token) {",
+                  "        pm.collectionVariables.set(\"token\", res.token);",
+                  "        pm.environment.set(\"token\", res.token);",
+                  "        console.log(\"Token berhasil disimpan:\", res.token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login - Karyawan (Frontliner)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "login"
+              ]
+            },
+            "description": "Login sebagai Karyawan Frontliner. Token otomatis disimpan ke variabel {{token}}.",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"frontliner@rotiwonosari.test\",\n  \"password\": \"password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var res = pm.response.json();",
+                  "    if (res.token) {",
+                  "        pm.collectionVariables.set(\"token\", res.token);",
+                  "        pm.environment.set(\"token\", res.token);",
+                  "        console.log(\"Token berhasil disimpan:\", res.token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Current User (Me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "me"
+              ]
+            },
+            "description": "Melihat profil user yang sedang login beserta role & posisi."
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "logout"
+              ]
+            },
+            "description": "Mencabut token autentikasi saat ini."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02. Karyawan (My KPI & Dashboard)",
+      "description": "Endpoint untuk karyawan mengisi capaian KPI harian, upload bukti, melihat dashboard dan riwayat.",
+      "item": [
+        {
+          "name": "Dashboard Saya",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/dashboard/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "dashboard",
+                "me"
+              ],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2026-11-19",
+                  "description": "Format YYYY-MM-DD (maksimal hari ini)",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Ringkasan capaian indikator, status laporan hari ini, dan skor."
+          },
+          "response": []
+        },
+        {
+          "name": "Daftar KPI Saya",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/my-kpis",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "my-kpis"
+              ],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2026-11-19",
+                  "description": "Format YYYY-MM-DD",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Melihat daftar indikator KPI yang ditugaskan untuk jabatan user login."
+          },
+          "response": []
+        },
+        {
+          "name": "Simpan / Kirim Capaian KPI",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/my-kpis/submissions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "my-kpis",
+                "submissions"
+              ]
+            },
+            "description": "Menyimpan draft (submit: false) atau langsung mengirim (submit: true) capaian KPI harian.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"2026-11-19\",\n  \"submit\": true,\n  \"items\": [\n    {\n      \"position_kpi_id\": 1,\n      \"answer_yes_no\": true,\n      \"numeric_value\": null\n    },\n    {\n      \"position_kpi_id\": 2,\n      \"answer_yes_no\": null,\n      \"numeric_value\": 100\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Bukti Foto KPI",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/kpi-submissions/1/evidences",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "kpi-submissions",
+                "1",
+                "evidences"
+              ]
+            },
+            "description": "Upload file foto bukti untuk capaian indikator yang mewajibkan bukti (Multipart Form Data).",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "description": "File foto bukti (jpg, jpeg, png, webp, maks 5MB)"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Riwayat Pengiriman KPI",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/my-kpis/history",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "my-kpis",
+                "history"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "APPROVED",
+                  "description": "Filter status (PENDING, APPROVED, REVISION, DRAFT)",
+                  "disabled": true
+                },
+                {
+                  "key": "date_from",
+                  "value": "2026-11-01",
+                  "description": "Tanggal awal YYYY-MM-DD",
+                  "disabled": true
+                },
+                {
+                  "key": "date_to",
+                  "value": "2026-11-19",
+                  "description": "Tanggal akhir YYYY-MM-DD",
+                  "disabled": true
+                },
+                {
+                  "key": "per_page",
+                  "value": "15",
+                  "description": "Jumlah data per halaman",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Daftar riwayat laporan KPI harian milik user login."
+          },
+          "response": []
+        },
+        {
+          "name": "Detail Riwayat KPI per Tanggal",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/my-kpis/history/2026-11-19",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "my-kpis",
+                "history",
+                "2026-11-19"
+              ]
+            },
+            "description": "Melihat rincian per kategori dan catatan revisi (jika ada) untuk tanggal tertentu."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03. Manager & Admin (Review & Tim)",
+      "description": "Endpoint pemantauan dashboard tim dan persetujuan / review laporan KPI.",
+      "item": [
+        {
+          "name": "Dashboard Tim",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/dashboard/team",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "dashboard",
+                "team"
+              ],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2026-11-19",
+                  "description": "Format YYYY-MM-DD",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Filter status anggota tim",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "priority",
+                  "description": "Urutan: priority atau name",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Melihat rekap kemajuan pengisian KPI seluruh anggota tim."
+          },
+          "response": []
+        },
+        {
+          "name": "Katalog Kategori KPI",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/kpi-categories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "kpi-categories"
+              ]
+            },
+            "description": "Melihat daftar kategori KPI beserta daftar indikator di dalamnya."
+          },
+          "response": []
+        },
+        {
+          "name": "Daftar KPI per Jabatan",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/positions/2/kpis",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "positions",
+                "2",
+                "kpis"
+              ]
+            },
+            "description": "Melihat indikator KPI beserta target dan bobot untuk ID jabatan tertentu (misal ID 2: Frontliner)."
+          },
+          "response": []
+        },
+        {
+          "name": "Review Laporan (Alur Utama)",
+          "item": [
+            {
+              "name": "Daftar Antrean Laporan Karyawan",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/reviews/reports",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "reviews",
+                    "reports"
+                  ],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "",
+                      "description": "Filter ID user",
+                      "disabled": true
+                    },
+                    {
+                      "key": "position_id",
+                      "value": "",
+                      "description": "Filter ID posisi",
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": "PENDING",
+                      "description": "Filter status laporan",
+                      "disabled": true
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "15",
+                      "description": "Item per halaman",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Melihat daftar laporan karyawan yang menunggu keputusan review."
+              },
+              "response": []
+            },
+            {
+              "name": "Detail Laporan Karyawan per Tanggal",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/reviews/reports/3/2026-11-19",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "reviews",
+                    "reports",
+                    "3",
+                    "2026-11-19"
+                  ]
+                },
+                "description": "Melihat seluruh indikator dan foto bukti yang dikirim karyawan (misal user ID: 3) pada tanggal tertentu."
+              },
+              "response": []
+            },
+            {
+              "name": "Keputusan Laporan Karyawan (Approve / Reject)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/reviews/reports/3/2026-11-19",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "reviews",
+                    "reports",
+                    "3",
+                    "2026-11-19"
+                  ]
+                },
+                "description": "Menyetujui (APPROVED) atau Menolak (REJECTED) satu laporan karyawan secara utuh. Jika REJECTED, 'notes' wajib diisi.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"decision\": \"APPROVED\",\n  \"notes\": \"Kerja bagus, target tercapai dengan baik.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Review Submissions (Opsional / Bulk)",
+          "item": [
+            {
+              "name": "Antrean Review per Indikator",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/reviews/queue",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "reviews",
+                    "queue"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "PENDING",
+                      "description": "Filter status submission",
+                      "disabled": true
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "15",
+                      "description": "Item per halaman",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Daftar submission indikator satuan yang menunggu review."
+              },
+              "response": []
+            },
+            {
+              "name": "Detail Submission",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/reviews/submissions/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "reviews",
+                    "submissions",
+                    "1"
+                  ]
+                },
+                "description": "Melihat detail 1 capaian indikator tertentu."
+              },
+              "response": []
+            },
+            {
+              "name": "Review 1 Submission",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/reviews/submissions/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "reviews",
+                    "submissions",
+                    "1"
+                  ]
+                },
+                "description": "Review keputusan untuk 1 submission id tertentu.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"decision\": \"APPROVED\",\n  \"notes\": \"Sesuai.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Review Bulk / Masal",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/reviews/bulk",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "reviews",
+                    "bulk"
+                  ]
+                },
+                "description": "Review keputusan untuk beberapa submission id sekaligus.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"decision\": \"APPROVED\",\n  \"notes\": \"Disetujui secara masal.\",\n  \"submission_ids\": [\n    1,\n    2\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04. Admin (Master Data & Manajemen)",
+      "description": "Endpoint khusus role admin untuk mengelola user, master indikator KPI, mapping jabatan, dan riwayat.",
+      "item": [
+        {
+          "name": "Manajemen Pengguna (Users)",
+          "item": [
+            {
+              "name": "Daftar Role",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/admin/roles",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "roles"
+                  ]
+                },
+                "description": "Mendapatkan daftar role yang tersedia (Admin, Manager, Karyawan)."
+              },
+              "response": []
+            },
+            {
+              "name": "Daftar Jabatan (Positions)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/admin/positions",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "positions"
+                  ]
+                },
+                "description": "Mendapatkan daftar jabatan (Store Manager, Frontliner, Produksi, Driver, Sales, SPV)."
+              },
+              "response": []
+            },
+            {
+              "name": "Daftar Pengguna (Users)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/admin/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "users"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "",
+                      "description": "Cari nama atau email",
+                      "disabled": true
+                    },
+                    {
+                      "key": "role_id",
+                      "value": "",
+                      "description": "Filter role ID",
+                      "disabled": true
+                    },
+                    {
+                      "key": "position_id",
+                      "value": "",
+                      "description": "Filter position ID",
+                      "disabled": true
+                    },
+                    {
+                      "key": "is_active",
+                      "value": "1",
+                      "description": "Filter aktif (1 / 0)",
+                      "disabled": true
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "15",
+                      "description": "Paginasi",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Mengambil daftar akun pengguna dengan filter & pagination."
+              },
+              "response": []
+            },
+            {
+              "name": "Buat Pengguna Baru",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/admin/users",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "users"
+                  ]
+                },
+                "description": "Membuat akun baru (non-admin wajib menyertakan position_id).",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Ahmad Kasir\",\n  \"email\": \"ahmad.kasir@rotiwonosari.test\",\n  \"password\": \"password123\",\n  \"role_id\": 3,\n  \"position_id\": 2,\n  \"is_active\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Detail Pengguna",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/admin/users/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "users",
+                    "1"
+                  ]
+                },
+                "description": "Melihat profil lengkap salah satu pengguna berdasarkan ID."
+              },
+              "response": []
+            },
+            {
+              "name": "Update Pengguna",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/admin/users/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "users",
+                    "1"
+                  ]
+                },
+                "description": "Memperbarui data profil akun pengguna.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Ahmad Kasir Senior\",\n  \"email\": \"ahmad.kasir@rotiwonosari.test\",\n  \"role_id\": 3,\n  \"position_id\": 2,\n  \"is_active\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Ubah Status Akun (Aktif/Nonaktif)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/admin/users/1/status",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "users",
+                    "1",
+                    "status"
+                  ]
+                },
+                "description": "Mengubah status akun menjadi aktif (true) atau dinonaktifkan (false).",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"is_active\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reset Password Pengguna",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/admin/users/1/password",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "users",
+                    "1",
+                    "password"
+                  ]
+                },
+                "description": "Reset password akun user dan mencabut semua sesi token aktifnya.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"password\": \"newpassword123\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Hapus Pengguna",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/admin/users/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "users",
+                    "1"
+                  ]
+                },
+                "description": "Menghapus akun pengguna."
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Katalog Indikator KPI",
+          "item": [
+            {
+              "name": "Daftar Indikator KPI",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/admin/kpi-indicators",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "kpi-indicators"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "",
+                      "description": "Cari nama indikator",
+                      "disabled": true
+                    },
+                    {
+                      "key": "category_id",
+                      "value": "",
+                      "description": "Filter kategori",
+                      "disabled": true
+                    },
+                    {
+                      "key": "is_active",
+                      "value": "1",
+                      "description": "Filter status aktif",
+                      "disabled": true
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "15",
+                      "description": "Paginasi",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Melihat katalog seluruh master indikator KPI."
+              },
+              "response": []
+            },
+            {
+              "name": "Tambah Indikator KPI Baru",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/admin/kpi-indicators",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "kpi-indicators"
+                  ]
+                },
+                "description": "Menambahkan master indikator KPI baru.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"category_id\": 1,\n  \"name\": \"Kebersihan Area Kasir dan Display\",\n  \"description\": \"Memastikan area meja kasir dan etalase roti selalu rapi dan bersih\",\n  \"unit\": \"kali\",\n  \"assessment_type\": \"YES_NO\",\n  \"calculation_type\": \"HIGHER_IS_BETTER\",\n  \"requires_evidence\": true,\n  \"is_active\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Detail Indikator KPI",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/admin/kpi-indicators/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "kpi-indicators",
+                    "1"
+                  ]
+                },
+                "description": "Melihat detail konfigurasi sebuah indikator KPI."
+              },
+              "response": []
+            },
+            {
+              "name": "Update Indikator KPI",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/admin/kpi-indicators/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "kpi-indicators",
+                    "1"
+                  ]
+                },
+                "description": "Mengubah data indikator KPI.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"category_id\": 1,\n  \"name\": \"Kebersihan Area Kasir dan Display (Updated)\",\n  \"description\": \"Memastikan area kasir dan rak display higienis setiap shift\",\n  \"unit\": \"kali\",\n  \"assessment_type\": \"YES_NO\",\n  \"calculation_type\": \"HIGHER_IS_BETTER\",\n  \"requires_evidence\": true,\n  \"is_active\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Hapus / Nonaktifkan Indikator KPI",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/admin/kpi-indicators/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "kpi-indicators",
+                    "1"
+                  ]
+                },
+                "description": "Menghapus indikator KPI (atau menonaktifkannya jika sudah memiliki riwayat capaian)."
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Mapping KPI per Jabatan",
+          "item": [
+            {
+              "name": "Sync KPI ke Jabatan (Total Bobot = 100)",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/admin/positions/2/kpis",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "positions",
+                    "2",
+                    "kpis"
+                  ]
+                },
+                "description": "Menghubungkan indikator ke jabatan tertentu (misal position ID: 2). Catatan: Jumlah total 'weight' dari semua items harus tepat 100!",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"items\": [\n    {\n      \"kpi_indicator_id\": 1,\n      \"target\": 1,\n      \"weight\": 50,\n      \"frequency\": \"DAILY\"\n    },\n    {\n      \"kpi_indicator_id\": 2,\n      \"target\": 100,\n      \"weight\": 50,\n      \"frequency\": \"DAILY\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Audit Capaian KPI (Submissions)",
+          "item": [
+            {
+              "name": "Daftar Seluruh Capaian KPI",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/admin/kpi-submissions",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "kpi-submissions"
+                  ],
+                  "query": [
+                    {
+                      "key": "user_id",
+                      "value": "",
+                      "description": "Filter user ID",
+                      "disabled": true
+                    },
+                    {
+                      "key": "role_id",
+                      "value": "",
+                      "description": "Filter role ID",
+                      "disabled": true
+                    },
+                    {
+                      "key": "position_id",
+                      "value": "",
+                      "description": "Filter jabatan ID",
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": "APPROVED",
+                      "description": "Filter status",
+                      "disabled": true
+                    },
+                    {
+                      "key": "date_from",
+                      "value": "2026-11-01",
+                      "description": "Tanggal mulai",
+                      "disabled": true
+                    },
+                    {
+                      "key": "date_to",
+                      "value": "2026-11-19",
+                      "description": "Tanggal akhir",
+                      "disabled": true
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "15",
+                      "description": "Item per halaman",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Melihat riwayat seluruh capaian indikator dari semua karyawan."
+              },
+              "response": []
+            },
+            {
+              "name": "Detail Capaian KPI",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/admin/kpi-submissions/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "kpi-submissions",
+                    "1"
+                  ]
+                },
+                "description": "Melihat rincian 1 capaian indikator termasuk bukti foto dan reviewer."
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -6,12 +6,15 @@ use App\Http\Controllers\KpiCategoriesController;
 use App\Http\Controllers\KpiEvidencesController;
 use App\Http\Controllers\KpiIndicatorController;
 use App\Http\Controllers\KpiReviewController;
+use App\Http\Controllers\MyDashboardController;
 use App\Http\Controllers\MyKpiController;
+use App\Http\Controllers\MyKpiHistoryController;
 use App\Http\Controllers\MyKpiSubmissionController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\PositionKpisController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TeamDashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login']);
@@ -27,12 +30,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:karyawan,manager,admin')->group(function () {
         Route::post('my-kpis/submissions', [MyKpiSubmissionController::class, 'store']);
         Route::post('kpi-submissions/{kpiSubmission}/evidences', [KpiEvidencesController::class, 'storeForSubmission']);
+        Route::get('dashboard/me', [MyDashboardController::class, 'index']);
+        Route::get('my-kpis/history', [MyKpiHistoryController::class, 'index']);
+        Route::get('my-kpis/history/{date}', [MyKpiHistoryController::class, 'show'])->where('date', '\d{4}-\d{2}-\d{2}');
     });
 
     // Katalog (read) + review untuk admin & manager
     Route::middleware('role:admin,manager')->group(function () {
         Route::get('kpi-categories', [KpiCategoriesController::class, 'index']);
         Route::get('positions/{position}/kpis', [PositionController::class, 'kpis']);
+        Route::get('dashboard/team', [TeamDashboardController::class, 'index']);
 
         Route::prefix('reviews')->group(function () {
             // Alur utama: per laporan karyawan

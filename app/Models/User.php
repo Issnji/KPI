@@ -60,4 +60,10 @@ class User extends Authenticatable
     {
         return in_array($this->positionKey(), array_map(fn ($n) => Str::lower(trim($n)), $names), true);
     }
+
+    public function canReviewTeam(): bool
+    {
+        return $this->hasRole('admin')
+            || ($this->hasRole('manager') && $this->hasPosition('store manager'));
+    }
 }

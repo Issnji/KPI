@@ -15,6 +15,7 @@ use App\Http\Controllers\PositionKpisController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TeamDashboardController;
+use App\Http\Controllers\KpiFinalReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login']);
@@ -30,6 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:karyawan,manager,admin')->group(function () {
         Route::post('my-kpis/submissions', [MyKpiSubmissionController::class, 'store']);
         Route::post('kpi-submissions/{kpiSubmission}/evidences', [KpiEvidencesController::class, 'storeForSubmission']);
+        Route::delete('kpi-submissions/{kpiSubmission}/evidences/{evidence}', [KpiEvidencesController::class, 'destroy']);
         Route::get('dashboard/me', [MyDashboardController::class, 'index']);
         Route::get('my-kpis/history', [MyKpiHistoryController::class, 'index']);
         Route::get('my-kpis/history/{date}', [MyKpiHistoryController::class, 'show'])->where('date', '\d{4}-\d{2}-\d{2}');
@@ -77,5 +79,11 @@ Route::middleware('auth:sanctum')->group(function () {
         // Capaian
         Route::get('kpi-submissions', [AdminKpiSubmissionController::class, 'index']);
         Route::get('kpi-submissions/{kpiSubmission}', [AdminKpiSubmissionController::class, 'show']);
+
+        Route::get('final-reviews', [KpiFinalReviewController::class, 'index']);
+        Route::get('final-reviews/{user}/{date}', [KpiFinalReviewController::class, 'show'])
+            ->whereNumber('user')->where('date', '\d{4}-\d{2}-\d{2}');
+        Route::post('final-reviews/{user}/{date}', [KpiFinalReviewController::class, 'decide'])
+            ->whereNumber('user')->where('date', '\d{4}-\d{2}-\d{2}');
     });
 });

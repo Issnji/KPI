@@ -22,6 +22,7 @@ class PositionKpiResource extends JsonResource
             // hanya ada di /my-kpis
             'current_period'   => $this->when(isset($this->resource->current_period), fn () => $this->current_period),
             'submission'       => $this->whenLoaded('currentSubmission', fn () => $this->currentSubmission ? [
+                'is_editable' => $this->currentSubmission->status->isEditable(),
                 'evidences_count' => $this->currentSubmission->evidences_count ?? 0,
                 'id'            => $this->currentSubmission->id,
                 'status'        => $this->currentSubmission->status,

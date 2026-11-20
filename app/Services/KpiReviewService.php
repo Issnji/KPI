@@ -229,6 +229,11 @@ class KpiReviewService
                 $submission->update(['status' => $decision]);
 
                 KpiReview::updateOrCreate(
+                    [
+                        'finalized_by' => null,
+                        'finalized_at' => null,
+                        'final_notes'  => null,
+                    ],
                     ['submission_id' => $submission->id],
                     [
                         'reviewer_id' => $reviewer->id,

@@ -23,6 +23,7 @@ class StoreKpiIndicatorRequest extends FormRequest
             'calculation_type'  => ['required', Rule::in(['HIGHER_IS_BETTER', 'LOWER_IS_BETTER'])],
             'requires_evidence' => ['sometimes', 'boolean'],
             'is_active'         => ['sometimes', 'boolean'],
+            'code' => ['nullable', 'string', 'max:50', 'regex:/^[A-Z0-9_]+$/', 'unique:kpi_indicators,code'],
         ];
     }
 

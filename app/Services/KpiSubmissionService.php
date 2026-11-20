@@ -15,18 +15,15 @@ use Illuminate\Validation\ValidationException;
 class KpiSubmissionService
 {
     /**
-     * Simpan (draft) atau kirim (submit) capaian KPI milik user untuk periode berjalan.
-     *
      * @param  array<int, array{position_kpi_id:int, answer_yes_no?:bool|null, numeric_value?:float|int|string|null}> $items
-     * @return Collection<int, KpiSubmission>
+     * @return array{saved: Collection<int, KpiSubmission>, skipped: array<int, array<string, mixed>>}
      */
-    public function saveForUser(User $user, array $items, bool $submit, ?CarbonInterface $date = null): Collection
+    public function saveForUser(User $user, array $items, bool $submit, ?CarbonInterface $date = null): array
     {
         abort_if(! $user->position_id, 422, 'Akun belum memiliki posisi/jabatan.');
 
         $date ??= now();
 
-        // Hanya KPI aktif milik jabatan user (mencegah isi KPI jabatan lain)
         $positionKpis = PositionKpi::query()
             ->with('kpiIndicator:id,name,assessment_type,requires_evidence')
             ->where('position_id', $user->position_id)
@@ -37,8 +34,9 @@ class KpiSubmissionService
 
         $this->assertItemsValid($items, $positionKpis);
 
-        return DB::transaction(function () use ($user, $items, $submit, $date, $positionKpis): Collection {
-            $saved = collect();
+        return DB::transaction(function () use ($user, $items, $submit, $date, $positionKpis): array {
+            $saved   = collect();
+            $skipped = [];
 
             foreach ($items as $i => $item) {
                 /** @var PositionKpi $pk */
@@ -55,13 +53,25 @@ class KpiSubmissionService
                     ->first();
 
                 if ($submission && ! $submission->status->isEditable()) {
+                    // Indikator mingguan/bulanan yang periodenya sudah terkirim itu normal di hari berikutnya:
+                    // lewati saja, jangan gagalkan seluruh laporan. Harian tetap ditolak (kirim ganda).
+                    if ($pk->frequency !== 'DAILY') {
+                        $skipped[] = [
+                            'position_kpi_id' => $pk->id,
+                            'name'            => $pk->kpiIndicator->name,
+                            'frequency'       => $pk->frequency,
+                            'status'          => $submission->status->value,
+                            'period_end'      => $period['end'],
+                        ];
+                        continue;
+                    }
+
                     throw ValidationException::withMessages([
                         "items.$i.position_kpi_id" => "KPI '{$pk->kpiIndicator->name}' periode ini sudah "
                             . strtolower($submission->status->value) . ' dan tidak bisa diubah.',
                     ]);
                 }
 
-                // Foto bukti hanya wajib untuk indikator yang ditandai requires_evidence
                 if (
                     $submit
                     && $pk->kpiIndicator->requires_evidence
@@ -77,7 +87,6 @@ class KpiSubmissionService
                     'position_kpi_id' => $pk->id,
                     'period_start'    => $period['start'],
                     'period_end'      => $period['end'],
-                    'report_date'     => $date->toDateString(), 
                 ]);
 
                 $submission->fill([
@@ -91,7 +100,13 @@ class KpiSubmissionService
                 $saved->push($submission);
             }
 
-            return $saved;
+            if ($saved->isEmpty()) {
+                throw ValidationException::withMessages([
+                    'items' => 'Semua indikator pada kiriman ini sudah terkirim untuk periodenya.',
+                ]);
+            }
+
+            return ['saved' => $saved, 'skipped' => $skipped];
         });
     }
 

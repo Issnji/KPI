@@ -24,6 +24,8 @@ class UpdateKpiIndicatorRequest extends FormRequest
             'calculation_type'  => ['sometimes', Rule::in(['HIGHER_IS_BETTER', 'LOWER_IS_BETTER'])],
             'requires_evidence' => ['sometimes', 'boolean'],
             'is_active'         => ['sometimes', 'boolean'],
+            'code' => ['sometimes', 'string', 'max:50', 'regex:/^[A-Z0-9_]+$/',
+            Rule::unique('kpi_indicators', 'code')->ignore($this->route('kpi_indicator'))],
         ];
     }
 }

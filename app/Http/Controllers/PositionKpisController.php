@@ -14,8 +14,11 @@ class PositionKpisController extends Controller
 
     public function sync(SyncPositionKpisRequest $request, Position $position): AnonymousResourceCollection
     {
-        return PositionKpiResource::collection(
-            $this->service->sync($position, $request->validated('items'))
-        )->additional(['message' => "KPI jabatan {$position->name} berhasil diperbarui."]);
+        $items = $this->service->sync($position, $request->validated('items'));
+
+        return PositionKpiResource::collection($items)->additional([
+            'message'      => "KPI jabatan {$position->name} berhasil diperbarui.",
+            'total_weight' => round((float) $items->sum('weight'), 2),
+        ]);
     }
 }

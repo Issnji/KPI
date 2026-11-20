@@ -7,6 +7,7 @@ use App\Models\PositionKpi;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use illumintane\Support\Str;
 
 class KpiIndicatorService
 {
@@ -26,13 +27,20 @@ class KpiIndicatorService
 
     public function create(array $data): KpiIndicator
     {
+        // FE mencocokkan indikator lewat code -> selalu terisi, unik
+        $data['code'] ??= $this->makeCode($data['name']);
+
         return KpiIndicator::create($data)->load('kpiCategory');
     }
 
     public function update(KpiIndicator $indicator, array $data): KpiIndicator
     {
         return DB::transaction(function () use ($indicator, $data): KpiIndicator {
-            // Tipe input tidak boleh berubah jika sudah ada capaian (data lama jadi tidak valid)
+            // Code dipakai FE sebagai kunci pemetaan -> tidak boleh berubah
+            if (isset($data['code']) && $indicator->code !== null && $data['code'] !== $indicator->code) {
+                throw ValidationException::withMessages(['code' => 'Kode indikator tidak bisa diubah.']);
+            }
+
             if (
                 isset($data['assessment_type'])
                 && $data['assessment_type'] !== $indicator->assessment_type
@@ -43,17 +51,20 @@ class KpiIndicatorService
                 ]);
             }
 
-            // Menonaktifkan indikator yang masih dipakai jabatan akan merusak total bobot 100
             if (array_key_exists('is_active', $data) && ! $data['is_active'] && $indicator->is_active) {
                 $this->assertNotAssigned($indicator);
             }
 
             $indicator->update($data);
 
-            // position_kpis.calculation_type adalah salinan dari indikator -> jaga tetap sinkron
             if ($indicator->wasChanged('calculation_type')) {
                 PositionKpi::where('kpi_indicator_id', $indicator->id)
                     ->update(['calculation_type' => $indicator->calculation_type]);
+            }
+
+            // BUG LAMA: ganti ke YES_NO membiarkan target jabatan (mis. 100) padahal YES_NO selalu bertarget 1
+            if ($indicator->wasChanged('assessment_type') && $indicator->assessment_type === 'YES_NO') {
+                PositionKpi::where('kpi_indicator_id', $indicator->id)->update(['target' => 1]);
             }
 
             return $indicator->load('kpiCategory');
@@ -101,5 +112,17 @@ class KpiIndicatorService
                     . '. Lepas dulu dari jabatan tersebut.',
             ]);
         }
+    }
+    
+    private function makeCode(string $name): string
+    {
+        $base = Str::limit(Str::upper(Str::slug($name, '_')), 40, '');
+        $code = $base;
+
+        for ($i = 2; KpiIndicator::where('code', $code)->exists(); $i++) {
+            $code = "{$base}_{$i}";
+        }
+
+        return $code;
     }
 }

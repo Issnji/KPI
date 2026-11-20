@@ -36,6 +36,9 @@ class KpiIndicatorSeeder extends Seeder
     /** @var array<string, string> code => calculation_type */
     private array $calc = [];
 
+    /** @var array<string, string> code => assessment_type */
+    private array $assess = [];
+
     public function run(): void
     {
         DB::transaction(function (): void {
@@ -55,32 +58,31 @@ class KpiIndicatorSeeder extends Seeder
             $category = KpiCategory::updateOrCreate(['name' => $categoryName]);
 
             foreach ($items as [$code, $name, $unit, $assessment, $calc, $description]) {
-                $indicator = KpiIndicator::updateOrCreate(
-                    ['name' => $name],
-                    [
-                        'category_id'      => $category->id,
-                        'description'      => $description,
-                        'unit'             => $unit,
-                        'assessment_type'  => $assessment,
-                        'calculation_type' => $calc,
-                        'is_active'        => true,
-                    ]
-                );
+                // Cari lewat code dulu (tahan rename dari Admin), lalu nama (backfill data lama)
+                $byCode    = KpiIndicator::where('code', $code)->first();
+                $indicator = $byCode ?? KpiIndicator::where('name', $name)->first() ?? new KpiIndicator();
 
-                $ids[$code]        = $indicator->id;
-                $this->calc[$code] = $calc;
-                $indicator = KpiIndicator::updateOrCreate(
-                ['name' => $name],
-                [
+                $attrs = [
+                    'code'              => $code,
                     'category_id'       => $category->id,
+                    'name'              => $name,
                     'description'       => $description,
                     'unit'              => $unit,
                     'assessment_type'   => $assessment,
                     'calculation_type'  => $calc,
                     'requires_evidence' => in_array($code, self::EVIDENCE_REQUIRED, true),
                     'is_active'         => true,
-                ]
-);
+                ];
+
+                if ($byCode) {
+                    unset($attrs['name']); // jangan balikkan nama yang sudah diubah Admin
+                }
+
+                $indicator->fill($attrs)->save();
+
+                $ids[$code]          = $indicator->id;
+                $this->calc[$code]   = $calc;
+                $this->assess[$code] = $assessment;
             }
         }
 
@@ -102,12 +104,10 @@ class KpiIndicatorSeeder extends Seeder
 
             foreach ($rows as [$code, $target, $weight, $frequency]) {
                 PositionKpi::updateOrCreate(
+                    ['position_id' => $position->id, 'kpi_indicator_id' => $ids[$code]],
                     [
-                        'position_id'      => $position->id,
-                        'kpi_indicator_id' => $ids[$code],
-                    ],
-                    [
-                        'target'           => $target,
+                        // Sama seperti PositionKpiService::sync: YES_NO selalu bertarget 1
+                        'target'           => $this->assess[$code] === self::YN ? 1 : $target,
                         'weight'           => $weight,
                         'frequency'        => $frequency,
                         'calculation_type' => $this->calc[$code],

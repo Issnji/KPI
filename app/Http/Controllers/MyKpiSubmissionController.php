@@ -16,7 +16,7 @@ class MyKpiSubmissionController extends Controller
     {
         $submit = $request->boolean('submit');
 
-        $saved = $this->service->saveForUser(
+        ['saved' => $saved, 'skipped' => $skipped] = $this->service->saveForUser(
             $request->user(),
             $request->validated('items'),
             $submit,
@@ -25,6 +25,7 @@ class MyKpiSubmissionController extends Controller
 
         return KpiSubmissionResource::collection($saved)->additional([
             'message' => $submit ? 'Capaian KPI berhasil dikirim.' : 'Draft capaian KPI tersimpan.',
+            'skipped' => $skipped,
         ]);
     }
 }

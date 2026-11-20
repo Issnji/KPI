@@ -50,6 +50,8 @@ class AdminKpiSubmissionResource extends JsonResource
                 'score'       => $this->review->score !== null ? (float) $this->review->score : null,
                 'notes'       => $this->review->notes,
                 'reviewed_at' => $this->review->reviewed_at,
+                'finalized_at' => $this->review->finalized_at,
+                'final_notes'  => $this->review->final_notes,
             ] : null),
         ];
     }

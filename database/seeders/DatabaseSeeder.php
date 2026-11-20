@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RolePositionSeeder::class,
-            Kpiindicatorseeder::class,
+            KpiIndicatorSeeder::class,
         ]);
     }
 }
